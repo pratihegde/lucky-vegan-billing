@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/lucky-vegan-billing/static/css/main.de103070.css",
+    "main.js": "/lucky-vegan-billing/static/js/main.081075b0.js",
+    "static/media/logo.png": "/lucky-vegan-billing/static/media/logo.11414187450b45776f7c.png",
+    "index.html": "/lucky-vegan-billing/index.html",
+    "main.de103070.css.map": "/lucky-vegan-billing/static/css/main.de103070.css.map",
+    "main.081075b0.js.map": "/lucky-vegan-billing/static/js/main.081075b0.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.de103070.css",
+    "static/js/main.081075b0.js"
+  ]
+}
