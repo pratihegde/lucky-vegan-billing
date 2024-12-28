@@ -1,7 +1,71 @@
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
 import logo from '../images/logo.png';
+import ReactDOMServer from 'react-dom/server';
+function formatExcelDate(excelDate) {
+    // Check if it's already a formatted string
+    if (typeof excelDate === 'string' && excelDate.includes(',')) {
+        return excelDate;
+    }
+    
+    // Convert Excel serial number to date
+    if (typeof excelDate === 'number' || !isNaN(excelDate)) {
+        const date = new Date((excelDate - 25569) * 86400 * 1000);
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        return `${days[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}th`;
+    }
+    
+    return 'Date not specified';
+}
+const PrintBillIframe = ({ bill }) => {
+    const iframeContent = `
+        <html>
+            <head>
+                <title>Print Bill</title>
+                <style>
+                    @page {
+                        size: 58mm auto;
+                        margin: 0mm;
+                    }
+                    body {
+                        font-family: monospace;
+                        font-size: 12px;
+                        width: 58mm;
+                        margin: 0;
+                        padding: 2mm;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                    pre {
+                        white-space: pre-wrap;
+                        margin: 0;
+                        width: 100%;
+                        overflow: hidden;
+                    }
+                    @media print {
+                        html, body {
+                            width: 58mm;
+                            height: auto;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <pre>${bill}</pre>
+            </body>
+        </html>
+    `;
 
+    return (
+        <iframe 
+            srcDoc={iframeContent} 
+            style={{ display: 'none' }}
+            title="Print Frame"
+        />
+    );
+};
 // Menu prices and size mappings (keep this outside component)
 const menuItems = {
     "CLASSIC HUMMUS": {
@@ -88,6 +152,8 @@ const BillGenerator = () => {
     const [orders, setOrders] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
+    const [discountPercent, setDiscountPercent] = useState('');
+    const [appliedDiscount, setAppliedDiscount] = useState(null);
 
     const processExcelFile = (file) => {
         const reader = new FileReader();
@@ -96,53 +162,50 @@ const BillGenerator = () => {
                 const data = new Uint8Array(e.target.result);
                 const workbook = XLSX.read(data, { type: 'array' });
                 
-                // Get Sheet 2
                 const sheet2Name = workbook.SheetNames[1];
                 const sheet2 = workbook.Sheets[sheet2Name];
-                
-                // Convert to JSON with column headers
                 const jsonData = XLSX.utils.sheet_to_json(sheet2, { header: 'A' });
                 
-                // Process each row (customer)
                 const processedOrders = [];
                 
-                // Start from index 1 to skip header row
                 for (let i = 1; i < jsonData.length; i++) {
                     const row = jsonData[i];
-                    
-                    // Skip empty rows or rows without customer name
                     if (!row.C) continue;
                     
-                    const subtotal = Math.round(parseFloat(row.J)) || 0;
                     const totalWithDelivery = Math.round(parseFloat(row.I)) || 0;
-                    const deliveryCharge = Math.round(totalWithDelivery - subtotal);
+                    const subtotalFromExcel = Math.round(parseFloat(row.J)) || 0;
+                    const deliveryCharge = totalWithDelivery - subtotalFromExcel;
                     
                     const order = {
                         customerName: row.C,
-                        deliveryDate: row.G ? String(row.G).trim() : '',
+                        deliveryDate: row.G ? formatExcelDate(row.G) : '',
                         items: [],
-                        subtotal: subtotal,
+                        subtotal: 0,
                         deliveryCharge: deliveryCharge,
-                        total: totalWithDelivery
+                        total: 0
                     };
                     
-                    // Check each menu item
+                    // Process menu items
                     Object.entries(menuItems).forEach(([itemName, itemData]) => {
                         Object.entries(itemData.sizes).forEach(([col, sizeData]) => {
                             const quantity = parseInt(row[col]) || 0;
                             if (quantity > 0) {
                                 const price = Math.round(sizeData.price);
+                                const itemTotal = Math.round(quantity * price);
                                 order.items.push({
                                     name: itemName,
                                     size: sizeData.size,
                                     quantity,
                                     price,
-                                    total: Math.round(quantity * price)
+                                    total: itemTotal
                                 });
-                                order.subtotal += quantity * price;
+                                order.subtotal += itemTotal;
                             }
                         });
                     });
+                    
+                    // Use the total from Excel (column I)
+                    order.total = totalWithDelivery;
                     
                     if (order.items.length > 0) {
                         processedOrders.push(order);
@@ -157,6 +220,40 @@ const BillGenerator = () => {
         };
         reader.readAsArrayBuffer(file);
     };
+    React.useEffect(() => {
+        const style = document.createElement('style');
+        style.textContent = `
+            @media print {
+                .no-print {
+                    display: none !important;
+                }
+                .print-only { 
+                    display: block !important;
+                }
+                .print-only.hidden {
+                    display: none !important;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        return () => document.head.removeChild(style);
+    }, []);
+    const applyDiscount = () => {
+        if (!selectedOrder || !discountPercent) return;
+        
+        const percent = parseFloat(discountPercent);
+        if (percent >= 0 && percent <= 100) {
+            const discountAmount = Math.round((selectedOrder.subtotal * percent) / 100);
+            setAppliedDiscount({
+                percentage: percent,
+                amount: discountAmount
+            });
+        } else {
+            alert('Please enter a valid discount percentage (0-100)');
+            setAppliedDiscount(null);
+        }
+        setDiscountPercent('');
+    };
 
     const generateBillText = (order) => {
         if (!order) return '';
@@ -164,19 +261,37 @@ const BillGenerator = () => {
         let billText = `Hi ${order.customerName.toUpperCase()},\n`;
         billText += `Your order total with LUCKY VEGAN for ${order.deliveryDate} is -\n\n`;
         
+        // Add items with proper spacing
         order.items.forEach(item => {
-            billText += `${item.quantity} x ${item.name} [${item.size}]  … ${item.price}\n`;
+            billText += `${item.quantity} x ${item.name} [${item.size}]- ${item.total}/-\n`;
         });
         
-        billText += `\nDELIVERY … ${order.deliveryCharge > 0 ? order.deliveryCharge : 'FREE'}\n`;
-        billText += `TOTAL … ${order.total}\n\n`;
+        billText += `\nSubtotal - ${order.subtotal}/-`;
+        
+        // Apply discount if present
+        let finalTotal = order.subtotal;
+        if (appliedDiscount) {
+            billText += `\nDiscount ${appliedDiscount.percentage}% - ${appliedDiscount.amount}/-`;
+            finalTotal -= appliedDiscount.amount;
+        }
+        
+        // Add delivery charge
+        billText += `\nDELIVERY - ${order.deliveryCharge}/-`;
+        finalTotal += order.deliveryCharge;
+        
+        // Add final total
+        
+        billText += `\nTOTAL -  ${finalTotal}/-\n\n`;
+        
+        
         billText += `Kindly pay via UPI to 9920038112 (select LUCKY VEGAN) or via the attached QR code. Please share a screenshot of the payment once it's complete. Thank you!`;
         
         return billText;
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-amber-50 to-orange-50">
+        <div className="min-h-screen bg-gradient-to-b from-amber-50 to-orange-50 no-print">
+            {selectedOrder && <PrintBillIframe bill={generateBillText(selectedOrder)} />}
             <div className="max-w-4xl mx-auto p-6">
                 {/* Header */}
                 <div className="text-center mb-8">
@@ -232,9 +347,14 @@ const BillGenerator = () => {
                 </div>
 
                 {/* Customer Selection */}
+                {/* Customer Selection */}
                 {orders.length > 0 && (
                     <div className="mb-8">
+                        <label htmlFor="customer-select" className="block mb-2 font-medium text-gray-700">
+                            Select a customer:
+                        </label>
                         <select
+                            id="customer-select"
                             onChange={(e) => setSelectedOrder(orders[e.target.value])}
                             className="w-full p-3 border rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                         >
@@ -248,12 +368,39 @@ const BillGenerator = () => {
                     </div>
                 )}
 
+                {selectedOrder && (
+                    <div className="bg-white rounded-lg shadow-lg p-6 mb-4">
+                        <div className="flex gap-2 mb-4">
+                            <input
+                                type="number"
+                                min="0"
+                                max="100"
+                                value={discountPercent}
+                                onChange={(e) => setDiscountPercent(e.target.value)}
+                                placeholder="Enter discount %"
+                                className="flex-1 p-2 border rounded"
+                            />
+                            <button
+                                onClick={applyDiscount}
+                                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                            >
+                                Apply Discount
+                            </button>
+                        </div>
+                        {appliedDiscount && (
+                            <div className="text-green-600 mb-4">
+                                {appliedDiscount.percentage}% discount applied (-₹{appliedDiscount.amount})
+                            </div>
+                        )}
+                    </div>
+                )}
+
                 {/* Bill Display */}
                 {selectedOrder && (
-                    <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-                        <pre className="whitespace-pre-wrap font-mono text-gray-800 mb-4">
-                            {generateBillText(selectedOrder)}
-                        </pre>
+                    <div className={`bg-white rounded-lg shadow-lg p-6 mb-8 ${selectedOrder ? 'print-only' : 'hidden'}`}>
+                    <pre className="whitespace-pre-wrap font-mono text-gray-800 mb-4">
+                        {generateBillText(selectedOrder)}
+                    </pre>
                         <div className="flex gap-4">
                             <button
                                 onClick={() => navigator.clipboard.writeText(generateBillText(selectedOrder))}
@@ -265,9 +412,14 @@ const BillGenerator = () => {
                                 Copy to Clipboard
                             </button>
                             <button
-                                onClick={() => window.print()}
-                                className="flex-1 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 flex items-center justify-center gap-2"
-                            >
+                             onClick={() => {
+                                const iframe = document.querySelector('iframe');
+                                iframe.contentWindow.print();
+                            }}
+                                
+                            
+                            className="flex-1 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 flex items-center justify-center gap-2"
+                        >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                                 </svg>
