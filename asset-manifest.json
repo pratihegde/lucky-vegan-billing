@@ -1,14 +1,15 @@
 {
   "files": {
-    "main.css": "/lucky-vegan-billing/static/css/main.6c86035d.css",
-    "main.js": "/lucky-vegan-billing/static/js/main.d367e1b1.js",
+    "main.css": "/lucky-vegan-billing/static/css/main.089f0dc4.css",
+    "main.js": "/lucky-vegan-billing/static/js/main.56729e6d.js",
     "static/media/logo.png": "/lucky-vegan-billing/static/media/logo.11414187450b45776f7c.png",
+    "static/media/qr-code.png": "/lucky-vegan-billing/static/media/qr-code.653d97d8ccf919044764.png",
     "index.html": "/lucky-vegan-billing/index.html",
-    "main.6c86035d.css.map": "/lucky-vegan-billing/static/css/main.6c86035d.css.map",
-    "main.d367e1b1.js.map": "/lucky-vegan-billing/static/js/main.d367e1b1.js.map"
+    "main.089f0dc4.css.map": "/lucky-vegan-billing/static/css/main.089f0dc4.css.map",
+    "main.56729e6d.js.map": "/lucky-vegan-billing/static/js/main.56729e6d.js.map"
   },
   "entrypoints": [
-    "static/css/main.6c86035d.css",
-    "static/js/main.d367e1b1.js"
+    "static/css/main.089f0dc4.css",
+    "static/js/main.56729e6d.js"
   ]
 }
