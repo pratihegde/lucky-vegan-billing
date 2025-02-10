@@ -117,7 +117,7 @@ const WeeklySpecialsAdmin = () => {
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    250g Price (T)
+                                    150g Price (U)
                                 </label>
                                 <input
                                     type="number"
@@ -131,7 +131,7 @@ const WeeklySpecialsAdmin = () => {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    150g Price (U)
+                                    250g Price (T)
                                 </label>
                                 <input
                                     type="number"
