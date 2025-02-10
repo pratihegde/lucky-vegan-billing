@@ -1,82 +1,109 @@
-// src/config/menuConfig.js
+// menuConfig.js
 
-export const menuItems = {
+export const fixedMenuItems = {
     "CLASSIC HUMMUS": {
-        column: "X",
         sizes: {
-            X: { size: "L", price: 375 },
-            Y: { size: "R", price: 275 }
+            "V": { size: "150g", price: 290 },
+            "W": { size: "250g", price: 390 }
         }
     },
     "MUHAMMARA": {
-        column: "Z",
         sizes: {
-            Z: { size: "L", price: 450 },
-            AA: { size: "R", price: 350 }
+            "X": { size: "150g", price: 325 },
+            "Y": { size: "250g", price: 425 }
         }
     },
-    "SUN DRIED TOMATO PESTO": {
-        column: "AB",
+    "PESTO": {
         sizes: {
-            AB: { size: "L", price: 475 },
-            AC: { size: "R", price: 375 }
+            "Z": { size: "150g", price: 375 },
+            "AA": { size: "250g", price: 475 }
         }
     },
-    "TOFU CC": {
-        column: "AD",
+    "TOFU CREAM CHEESE": {
         sizes: {
-            AD: { size: "L", price: 450 },
-            AE: { size: "R", price: 350 }
+            "AB": { size: "150g", price: 375 },
+            "AC": { size: "250g", price: 475 }
         }
     },
-    "CHILLI GARLIC CC": {
-        column: "AF",
+    "CHILLI GARLIC CREAM CHEESE": {
         sizes: {
-            AF: { size: "L", price: 450 },
-            AG: { size: "R", price: 350 }
+            "AD": { size: "150g", price: 375 },
+            "AE": { size: "250g", price: 475 }
         }
     },
-    "SCALLION CC": {
-        column: "AH",
+    "SCALLION CREAM CHEESE": {
         sizes: {
-            AH: { size: "L", price: 450 },
-            AI: { size: "R", price: 350 }
+            "AF": { size: "150g", price: 375 },
+            "AG": { size: "250g", price: 475 }
         }
     },
     "CLASSIC CHEVRE": {
-        column: "AL",
         sizes: {
-            AL: { size: "R", price: 390 }
+            "AJ": { size: "100g", price: 350 }
         }
     },
     "SAVORY CHEVRE": {
-        column: "AM",
         sizes: {
-            AM: { size: "R", price: 440 }
+            "AK": { size: "100g", price: 350 }
         }
     },
     "DILL CHEVRE": {
-        column: "AN",
         sizes: {
-            AN: { size: "R", price: 440 }
+            "AL": { size: "100g", price: 350 }
         }
     },
     "CRANBERRY WALNUT CHEVRE": {
-        column: "AO",
         sizes: {
-            AO: { size: "R", price: 470 }
+            "AM": { size: "100g", price: 470 }
         }
     },
     "CRACKERS": {
-        column: "AP",
         sizes: {
-            AP: { size: "R", price: 135 }
+            "AN": { size: "pack", price: 200 }
         }
     },
     "PITA": {
-        column: "AQ",
         sizes: {
-            AQ: { size: "R", price: 135 }
+            "AO": { size: "pack", price: 200 }
+        }
+    },
+    "RAGI LAVACHE": {
+        sizes: {
+            "AP": { size: "pack", price: 200 }
         }
     }
+};
+
+// Function to get weekly specials from localStorage
+export const getWeeklySpecials = () => {
+    const savedSpecials = localStorage.getItem('weeklySpecials');
+    if (!savedSpecials) return null;
+
+    const { specialSalad, specialDip } = JSON.parse(savedSpecials);
+    
+    return {
+        "SPECIAL SALAD": {
+            name: specialSalad.name,
+            sizes: {
+                "R": { size: "Regular", price: specialSalad.basePrice },
+                "S": { size: "with Chevre", price: specialSalad.chevrePrice }
+            }
+        },
+        "SPECIAL DIP": {
+            name: specialDip.name,
+            sizes: {
+                "T": { size: "150g", price: specialDip.smallPrice },
+                "U": { size: "250g", price: specialDip.largePrice }
+            }
+        }
+    };
+};
+
+// Function to get all menu items including weekly specials
+export const getAllMenuItems = () => {
+    const weeklySpecials = getWeeklySpecials();
+    return {
+        ...weeklySpecials,
+        ...fixedMenuItems
+    };
 };
