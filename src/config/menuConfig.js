@@ -3,38 +3,38 @@
 export const fixedMenuItems = {
     "CLASSIC HUMMUS": {
         sizes: {
-            "V": { size: "150g", price: 275 },
-            "W": { size: "250g", price: 375 }
+            "V": { size: "250g", price: 375 },
+            "W": { size: "150g", price: 275 }
         }
     },
     "MUHAMMARA": {
         sizes: {
-            "X": { size: "150g", price: 350 },
-            "Y": { size: "250g", price: 450 }
+            "X": { size: "250g", price: 450 },
+            "Y": { size: "150g", price: 350 }
         }
     },
     "PESTO": {
         sizes: {
-            "Z": { size: "150g", price: 375 },
-            "AA": { size: "250g", price: 475 }
+            "Z": { size: "250g", price: 475 },
+            "AA": { size: "150g", price: 375 }
         }
     },
     "TOFU CREAM CHEESE": {
         sizes: {
-            "AB": { size: "150g", price: 350 },
-            "AC": { size: "250g", price: 450 }
+            "AB": { size: "250g", price: 450 },
+            "AC": { size: "150g", price: 350 }
         }
     },
     "CHILLI GARLIC CREAM CHEESE": {
         sizes: {
-            "AD": { size: "150g", price: 350 },
-            "AE": { size: "250g", price: 450 }
+            "AD": { size: "250g", price: 450 },
+            "AE": { size: "150g", price: 350 }
         }
     },
     "SCALLION CREAM CHEESE": {
         sizes: {
-            "AF": { size: "150g", price: 350 },
-            "AG": { size: "250g", price: 450 }
+            "AF": { size: "250g", price: 450 },
+            "AG": { size: "150g", price: 350 }
         }
     },
     "CLASSIC CHEVRE": {
@@ -59,17 +59,17 @@ export const fixedMenuItems = {
     },
     "CRACKERS": {
         sizes: {
-            "AN": { size: "100g", price: 135 }
+            "AN": { size: "pack", price: 135 }
         }
     },
     "PITA": {
         sizes: {
-            "AO": { size: "100g", price: 135 }
+            "AO": { size: "pack", price: 135 }
         }
     },
     "RAGI LAVACHE": {
         sizes: {
-            "AP": { size: "100g", price: 135 }
+            "AP": { size: "pack", price: 135 }
         }
     }
 };
@@ -92,8 +92,8 @@ export const getWeeklySpecials = () => {
         "SPECIAL DIP": {
             name: specialDip.name,
             sizes: {
-                "T": { size: "150g", price: specialDip.smallPrice },
-                "U": { size: "250g", price: specialDip.largePrice }
+                "T": { size: "250g", price: specialDip.largePrice },
+                "U": { size: "150g", price: specialDip.smallPrice }
             }
         }
     };
