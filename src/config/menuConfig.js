@@ -3,14 +3,14 @@
 export const fixedMenuItems = {
     "CLASSIC HUMMUS": {
         sizes: {
-            "V": { size: "150g", price: 290 },
-            "W": { size: "250g", price: 390 }
+            "V": { size: "150g", price: 275 },
+            "W": { size: "250g", price: 375 }
         }
     },
     "MUHAMMARA": {
         sizes: {
-            "X": { size: "150g", price: 325 },
-            "Y": { size: "250g", price: 425 }
+            "X": { size: "150g", price: 350 },
+            "Y": { size: "250g", price: 450 }
         }
     },
     "PESTO": {
@@ -21,55 +21,55 @@ export const fixedMenuItems = {
     },
     "TOFU CREAM CHEESE": {
         sizes: {
-            "AB": { size: "150g", price: 375 },
-            "AC": { size: "250g", price: 475 }
+            "AB": { size: "150g", price: 350 },
+            "AC": { size: "250g", price: 450 }
         }
     },
     "CHILLI GARLIC CREAM CHEESE": {
         sizes: {
-            "AD": { size: "150g", price: 375 },
-            "AE": { size: "250g", price: 475 }
+            "AD": { size: "150g", price: 350 },
+            "AE": { size: "250g", price: 450 }
         }
     },
     "SCALLION CREAM CHEESE": {
         sizes: {
-            "AF": { size: "150g", price: 375 },
-            "AG": { size: "250g", price: 475 }
+            "AF": { size: "150g", price: 350 },
+            "AG": { size: "250g", price: 450 }
         }
     },
     "CLASSIC CHEVRE": {
         sizes: {
-            "AJ": { size: "100g", price: 350 }
+            "AJ": { size: "150g", price: 390 }
         }
     },
     "SAVORY CHEVRE": {
         sizes: {
-            "AK": { size: "100g", price: 350 }
+            "AK": { size: "150g", price: 440 }
         }
     },
     "DILL CHEVRE": {
         sizes: {
-            "AL": { size: "100g", price: 350 }
+            "AL": { size: "150g", price: 440 }
         }
     },
     "CRANBERRY WALNUT CHEVRE": {
         sizes: {
-            "AM": { size: "100g", price: 470 }
+            "AM": { size: "150g", price: 470 }
         }
     },
     "CRACKERS": {
         sizes: {
-            "AN": { size: "pack", price: 200 }
+            "AN": { size: "100g", price: 135 }
         }
     },
     "PITA": {
         sizes: {
-            "AO": { size: "pack", price: 200 }
+            "AO": { size: "100g", price: 135 }
         }
     },
     "RAGI LAVACHE": {
         sizes: {
-            "AP": { size: "pack", price: 200 }
+            "AP": { size: "100g", price: 135 }
         }
     }
 };
