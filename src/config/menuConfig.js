@@ -59,7 +59,7 @@ export const fixedMenuItems = {
     },
     "CRACKERS": {
         sizes: {
-            "AN": { size: "pack", price: 135 }
+            "AN": { size: "pack", price: 150 }
         }
     },
     "PITA": {
