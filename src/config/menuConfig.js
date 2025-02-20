@@ -64,12 +64,12 @@ export const fixedMenuItems = {
     },
     "PITA": {
         sizes: {
-            "AO": { size: "pack", price: 135 }
+            "AO": { size: "pack", price: 150 }
         }
     },
     "RAGI LAVACHE": {
         sizes: {
-            "AP": { size: "pack", price: 135 }
+            "AP": { size: "pack", price: 150 }
         }
     }
 };
