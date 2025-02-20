@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/lucky-vegan-billing/static/css/main.e879abe0.css",
-    "main.js": "/lucky-vegan-billing/static/js/main.6d18a194.js",
+    "main.js": "/lucky-vegan-billing/static/js/main.979591f1.js",
     "static/media/logo.png": "/lucky-vegan-billing/static/media/logo.11414187450b45776f7c.png",
     "static/media/qr-code.png": "/lucky-vegan-billing/static/media/qr-code.653d97d8ccf919044764.png",
     "index.html": "/lucky-vegan-billing/index.html",
     "main.e879abe0.css.map": "/lucky-vegan-billing/static/css/main.e879abe0.css.map",
-    "main.6d18a194.js.map": "/lucky-vegan-billing/static/js/main.6d18a194.js.map"
+    "main.979591f1.js.map": "/lucky-vegan-billing/static/js/main.979591f1.js.map"
   },
   "entrypoints": [
     "static/css/main.e879abe0.css",
-    "static/js/main.6d18a194.js"
+    "static/js/main.979591f1.js"
   ]
 }
